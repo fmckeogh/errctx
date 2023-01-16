@@ -1,0 +1,9 @@
+[package]
+name = "errctx"
+version = "1.0.0"
+edition = "2021"
+description = "Convenience wrapper for adding context to errors"
+license = "MIT"
+
+[dependencies]
+thiserror = "1.0.38"
