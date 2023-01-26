@@ -3,18 +3,25 @@
 //! Wrapper for tacking on path context
 
 use std::{
-    fmt::{self, Display},
+    error::Error,
+    fmt::{self, Debug, Display},
     path::{Path, PathBuf},
 };
 
 /// Wrapper around an error providing additional context.
-#[derive(Debug, thiserror::Error)]
+#[derive(Debug)]
 pub struct ErrCtx<E, T> {
     /// Inner error
-    #[source]
     pub inner: E,
     /// Context associated with error
     pub ctx: T,
+}
+
+impl<E: Error + 'static, T: Debug> Error for ErrCtx<E, T> {
+    fn source(&self) -> Option<&(dyn Error + 'static)> {
+        use thiserror::__private::AsDynError;
+        Some(self.inner.as_dyn_error())
+    }
 }
 
 impl<E, T> ErrCtx<E, T> {
@@ -24,9 +31,9 @@ impl<E, T> ErrCtx<E, T> {
     }
 }
 
-impl<E, T: Display> Display for ErrCtx<E, T> {
+impl<E, T: Debug> Display for ErrCtx<E, T> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.ctx)
+        write!(f, "{:?}", self.ctx)
     }
 }
 
