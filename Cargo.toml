@@ -6,4 +6,4 @@ description = "Convenience wrapper for adding context to errors"
 license = "MIT"
 
 [dependencies]
-thiserror = "1.0.38"
+thiserror = "1.0.40"
